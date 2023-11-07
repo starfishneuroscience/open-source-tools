@@ -1,0 +1,132 @@
+'This script is designed to extract the file revision and save it in the .STL format as 'filename_Rev Revision.STL,' featuring enhanced error handling.
+'Edited by Ubada Yusuf on 22-09-2023.
+'Modified by akl47 on 11/6/2023
+'This macro is created to figure out how to use the OpenAt part of the BrowseForFolder function
+'Edits by Carrie Ives - 2-4-2022
+'BrowsForFolder is from the Create Custom Property Macro from the GoEngineer website
+'That one was recorded on 07/10/18 by Cody Salyer
+
+Option Explicit
+
+Dim swApp As Object
+
+Dim startingFolder As Variant
+Dim myPath As String
+    
+Dim swCustProp As CustomPropertyManager
+Dim mde As ModelDocExtension
+Dim swModel As ModelDoc2
+Dim Revision As String
+
+Dim Part As Object
+Dim filesave As Variant
+Dim Bodies() As SldWorks.Body2
+
+Sub main()
+
+Set swApp = Application.SldWorks
+Set swModel = swApp.ActiveDoc
+
+If swModel Is Nothing Then
+
+    MsgBox ("Please open a file")
+
+Else
+    'Get output directory based on project of current file location
+    Dim outputPath As String
+    myPath = GetProjectDirectory(swModel)
+    outputPath = myPath & "Output\"
+    Call Mk_Dir(outputPath)
+    
+    'Get Revision
+    Set mde = swModel.Extension
+    Set swCustProp = mde.CustomPropertyManager("")
+    Revision = GetRevision()
+
+    ' check for the revision if exist
+    If Revision = "" Then
+        MsgBox ("Please add rev")
+    Else
+        Call SaveDocumentAsSTL(Part, outputPath)
+    End If
+End If
+
+End Sub
+
+Function GetProjectDirectory(swApp As ModelDoc2) As String
+
+Dim path As String
+Dim projectPath As String
+Dim pathArray() As String
+Dim i As Long
+
+path = swApp.GetPathName
+pathArray = Split(path, "\")
+
+For i = LBound(pathArray, 1) To UBound(pathArray, 1)
+    projectPath = projectPath & pathArray(i) & "\"
+    If InStr(1, pathArray(i), "P-") <> 0 Then
+        Exit For
+    End If
+Next i
+ 
+GetProjectDirectory = projectPath
+
+End Function
+
+
+Function GetRevision() As String
+    ' Function purpose: Read revision from solidworks property manager and save it as variable
+    Dim bool As Boolean
+    Dim val As String
+    Dim resolved As Boolean
+    Dim partID As String
+    Dim response As String
+    
+    ' Read the revision property from solidworks custom property manager
+    bool = swCustProp.Get5("revision", True, val, response, resolved)
+    GetRevision = response
+
+End Function
+
+Function SaveDocumentAsSTL(Part As Object, outputPath As String) As Boolean
+    ' Function purpose: Save a SolidWorks part as an STL file.
+    
+Dim SelMgr As Object
+Dim boolstatus As Boolean
+Dim longstatus As Long, longwarnings As Long
+Dim Feature As Object
+Dim Step As Long
+
+    Set Part = swApp.ActiveDoc
+    Set SelMgr = Part.SelectionManager
+    Step = swApp.SetUserPreferenceIntegerValue(swStepAP, 203)
+
+    ' Get the document's filename without extension
+    Dim fileName As String
+    fileName = Left(Part.GetTitle, Len(Part.GetTitle) - 7) ' Assuming the extension is always 7 characters long (e.g., ".SLDPRT")
+
+    ' Create the full path for the STL file by combining mypath and fileName
+    Dim fullPath As String
+    fullPath = outputPath & fileName & "-" & Revision & ".STL"
+
+    ' Save the document as an STL file
+    Part.SaveAs2 fullPath, 0, True, False
+    ' Display a message indicating the file has been saved
+    MsgBox "File saved as STL at " & fullPath
+
+End Function
+
+Function Mk_Dir(path As String)
+
+If Len(Dir(path, vbDirectory)) = 0 Then
+' doesn't exist, so create the folder
+    MkDir path
+    Debug.Print "Directory " & path & " created."
+Else
+    Debug.Print "Directory " & path & " already exists"
+End If
+
+End Function
+
+
