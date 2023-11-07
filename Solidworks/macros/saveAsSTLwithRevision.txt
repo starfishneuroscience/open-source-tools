@@ -123,7 +123,7 @@ Function SaveBodiesAsSTL(Bodies() As SldWorks.Body2, outputPath As String) As Bo
     
 
     BodyExportCount = 0
-    If UBound(Bodies) > 1 Then 'If its a multibody
+    If UBound(Bodies) > 0 Then 'If its a multibody
     
         ' For each body in the Bodies array, save it as an STL file
 
