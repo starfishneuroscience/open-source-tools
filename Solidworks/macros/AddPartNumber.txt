@@ -1,0 +1,120 @@
+' This script is an API macro developed to Create Part Info Text on Construction Line containing file revetion and Part ID.
+' Macro Developer: UBADA YUSUF
+' Email: UbadaYusuf@gmail.com
+
+Dim swApp As Object
+Dim Part As Object
+Dim mySketchText As Object
+
+Dim swModel As SldWorks.ModelDoc2
+Dim selMgr As SldWorks.SelectionMgr
+Dim swCustProp As CustomPropertyManager
+
+Dim selObjLine As SldWorks.SketchLine
+Dim selObjSeg As SldWorks.SketchSegment
+
+Dim boolstatus As Boolean
+Dim longstatus As Long, longwarnings As Long
+
+Dim swAppEvents As New CommandCloseNotify
+Dim swSketch As SldWorks.Sketch
+Public CommandCloseNotify As CommandCloseNotify
+
+Dim swTextFormat As SldWorks.TextFormat
+Dim TextFormatObj As Object
+Dim ModelDocExtension As ModelDocExtension
+
+
+
+Dim TextHight As Double
+
+Sub main()
+
+Set swApp = Application.SldWorks
+Set swModel = swApp.ActiveDoc
+
+' condetion check for open file
+If swModel Is Nothing Then
+
+        MsgBox ("Please open a file and rerun the macro")
+        Exit Sub
+    Else
+    
+Set ModelDocExtension = swModel.Extension
+Set swCustProp = ModelDocExtension.CustomPropertyManager("")
+Set swAppEvents.swApp = swApp
+Set swSketch = swModel.GetActiveSketch2
+Set selMgr = swModel.SelectionManager
+
+' run center line command on solidworks
+swApp.RunCommand swCommands_CenterLine, ""
+End If
+End Sub
+
+Function ExcuteRestCode(Optional dummy As Variant = Empty)
+    ' the Purpose of this function is to excute the required functions after recive command notify from the class
+
+    swModel.Extension.SelectAll
+    Call InsertSketchTextOnLine
+
+
+End Function
+
+Function InsertSketchTextOnLine()
+' the purpose of this function is to insert sketch text with the properies required on a selected line
+
+    Set swApp = Application.SldWorks
+    Set Part = swApp.ActiveDoc
+    Set selMgr = Part.SelectionManager
+    
+    ' Check if more than one line is selected
+    If selMgr.GetSelectedObjectCount2(-1) > 1 Then
+        MsgBox "Only one Line Is Allowed"
+        Exit Function
+    End If
+    
+    
+    Set selObjLine = selMgr.GetSelectedObject6(1, -1)
+    Set selObjSeg = selMgr.GetSelectedObject6(1, -1)
+
+    If Not selObjLine Is Nothing Then
+
+        Dim startPoint As Variant, endPoint As Variant
+        startPoint = selObjLine.GetStartPoint
+        endPoint = selObjLine.GetEndPoint
+
+        ' get the segment name in order to be used sketch inser on the line
+        Dim SegmentName As String
+        SegmentName = selObjSeg.GetName
+        Debug.Print SegmentName
+
+        ' Set Text Hight.
+        TextHight = InputBox("Please enter text hight in mm:")
+        Debug.Print TextHight
+        Set TextFormatObj = ModelDocExtension.GetUserPreferenceTextFormat(swUserPreferenceTextFormat_e.swDetailingBalloonTextFormat, 0)
+        Set swTextFormat = TextFormatObj
+        swTextFormat.Bold = True
+        swTextFormat.CharHeight = TextHight / 1000
+        boolstatus = ModelDocExtension.SetUserPreferenceTextFormat(swUserPreferenceTextFormat_e.swDetailingNoteTextFormat, 0, swTextFormat)
+        Debug.Print "Tools > Options > Document Properties > Annotations > Balloons > Font is italic and bold: " & boolstatus
+
+            ' Set Custom properties as Sketch Text.
+        Dim Text As String
+        Text = "$PRP:""Part_ID""-$PRP:""Revision"""
+        boolstatus = Part.Extension.SelectByID2(SegmentName, "SKETCHSEGMENT", startPoint(0), startPoint(1), startPoint(2), False, 1, Nothing, 0)
+        Set mySketchText = Part.InsertSketchText(0, 0, 0, Text, 1, 0, 0, 100, 100)
+        
+
+    End If
+
+
+End Function
+
+
+
+
+
+
+
+
+

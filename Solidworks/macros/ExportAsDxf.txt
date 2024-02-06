@@ -1,0 +1,237 @@
+'Created by Ubada Yusuf on Jan-11-2024.
+'Modified by akl47 on Jan-11-2023
+
+' Define sheetMetal options
+Enum SheetMetalOptions_e
+    ExportFlatPatternGeometry = 1
+    IncludeHiddenEdges = 2
+    ExportBendLines = 4
+    IncludeSketches = 8
+    MergeCoplanarFaces = 16
+    ExportLibraryFeatures = 32
+    ExportFormingTools = 64
+    ExportBoundingBox = 2048
+End Enum
+
+Dim swApp As SldWorks.SldWorks
+Dim swModel As SldWorks.ModelDoc2
+Dim swCustProp As CustomPropertyManager
+Dim mde As ModelDocExtension
+Dim swPart As Object
+Dim swBody As SldWorks.Body2
+Dim startingFolder As Variant
+Dim outputPath As String
+Dim Part As Object
+Dim SheetMetalCheck As Boolean
+Dim partID As String
+Dim revision As String
+
+
+
+Sub Main()
+
+    Set swApp = Application.SldWorks
+    Set swModel = swApp.ActiveDoc
+    Set mde = swModel.Extension
+    Set swCustProp = mde.CustomPropertyManager("")
+    
+    'check for active document
+    If swModel Is Nothing Then
+        MsgBox ("Please open a file")
+
+    ElseIf swModel.GetType = swDocPART Then
+
+        ' Excute required functions
+        Dim currentPath As String
+        currentPath = GetProjectDirectory(swModel)
+        outputPath = currentPath & "Output\"
+        Call Mk_Dir(outputPath)
+        
+        partID = GetPartID()
+        revision = GetRevision()
+        Debug.Print partID & "-" & revision
+            
+        ' check for the revision if exist
+        If revision = "" Then
+            MsgBox ("Please add Custom Property: Revision")
+        ElseIf partID = "" Then
+            MsgBox ("Please add Custom Property: Part_ID")
+        Else
+            SheetMetalCheck = isSheetMetal
+            Debug.Print ("Sheet Metal Check:" & SheetMetalCheck)
+            If SheetMetalCheck Then
+               Call ExportAsDXFSheetMetal
+            Else
+                Debug.Print ExportAsDXFNormal
+            End If
+        End If
+    End If
+
+End Sub
+
+Function ExportAsDXFSheetMetal()
+   
+Dim bool As Boolean
+Dim val As String
+Dim resolved As Boolean
+
+
+' Create the full path for the STL file by combining outputPath and fileName
+    Dim fullPath As String
+    fullPath = outputPath & partID & "-" & "revision" & ".dxf"
+    Debug.Print "fullPath:" & fullPath
+    
+' get the full model path
+    Dim modelPath As String
+    modelPath = swModel.GetPathName
+    Debug.Print "modelPath:" & modelPath
+   
+    If modelPath = "" Then
+        Err.Raise vbError, "", "Part document must be saved"
+    End If
+    
+      If False = swModel.ExportToDWG2(fullPath, modelPath, swExportToDWG_e.swExportToDWG_ExportSheetMetal, False, Empty, False, False, SheetMetalOptions_e.ExportFlatPatternGeometry, Empty) Then
+        Err.Raise vbError, "", "Failed to export flat pattern"
+    End If
+ 
+    
+End Function
+
+
+Function isSheetMetal() As Boolean
+    Dim swPart As PartDoc
+    Dim swBody As Body2
+    Dim swFeature As SldWorks.Feature
+    Dim bodies As Variant
+
+    ' Check if it's a part document
+    If Not swModel Is Nothing Then
+        If swModel.GetType() = swDocPART Then
+            Set swPart = swModel
+            Set swFeature = swModel.FirstFeature
+
+            ' Check if there are features
+            If Not swFeature Is Nothing Then
+                ' Get the bodies
+                bodies = swPart.GetBodies2(swSolidBody, False)
+
+                ' Check if there are bodies
+                If Not IsEmpty(bodies) Then
+                    ' Get the first body
+                    Set swBody = bodies(0)
+
+                    ' Check if it's a sheet metal part
+                    isSheetMetal = swBody.isSheetMetal()
+                Else
+                    ' No bodies
+                    isSheetMetal = False
+                End If
+            Else
+                ' No features
+                isSheetMetal = False
+            End If
+        Else
+            ' Not a part document
+            isSheetMetal = False
+        End If
+    Else
+        MsgBox ("There is no active document.")
+        isSheetMetal = False
+    End If
+End Function
+
+Function GetProjectDirectory(swApp As ModelDoc2) As String
+
+    Dim path As String
+    Dim projectPath As String
+    Dim pathArray() As String
+    Dim i As Long
+
+    path = swApp.GetPathName
+    pathArray = Split(path, "\")
+
+    For i = LBound(pathArray, 1) To UBound(pathArray, 1)
+        projectPath = projectPath & pathArray(i) & "\"
+        If InStr(1, pathArray(i), "P-") <> 0 Then
+            Exit For
+        End If
+    Next i
+    
+    GetProjectDirectory = projectPath
+
+End Function
+
+Function GetRevision() As String
+    ' Function purpose: Read revision from solidworks property manager and save it as variable
+    Dim bool As Boolean
+    Dim val As String
+    Dim resolved As Boolean
+    Dim response As String
+    
+    ' Read the revision property from solidworks custom property manager
+    bool = swCustProp.Get5("revision", True, val, response, resolved)
+    GetRevision = response
+
+End Function
+
+Function GetPartID() As String
+    ' Function purpose: Read revision from solidworks property manager and save it as variable
+    Dim bool As Boolean
+    Dim val As String
+    Dim resolved As Boolean
+    Dim response As String
+
+    ' Read the revision property from solidworks custom property manager
+    bool = swCustProp.Get5("part_id", True, val, response, resolved)
+    GetPartID = response
+    
+End Function
+
+Function Mk_Dir(path As String)
+    Debug.Print path
+
+    If Len(Dir(path, vbDirectory)) = 0 Then
+    ' doesn't exist, so create the folder
+        MkDir path
+        Debug.Print "Directory " & path & " created."
+    Else
+        Debug.Print "Directory " & path & " already exists"
+    End If
+
+End Function
+
+
+Function ExportAsDXFNormal() As Boolean
+    Dim sModelName As String
+    Dim sPathName As String
+    Dim varAlignment As Variant
+    Dim dataAlignment(11) As Double
+    Dim varViews As Variant
+    Dim dataViews(0) As String
+
+    Set swApp = Application.SldWorks
+    Set swModel = swApp.ActiveDoc
+    Set swPart = swModel
+    sModelName = swModel.GetPathName
+
+
+    ' Create the full path for the DXF file by combining outputPath and fileName
+    fullPath = outputPath & partID & "-" & revision & ".dxf"
+   Debug.Print fullPath
+    dataAlignment(0) = 0#
+    dataAlignment(1) = 0#
+    dataAlignment(2) = 0#
+    dataAlignment(3) = 1#
+    dataAlignment(4) = 0#
+    dataAlignment(5) = 0#
+    dataAlignment(6) = 0#
+    dataAlignment(7) = 0#
+    dataAlignment(8) = -1#
+    dataAlignment(9) = 0#
+    dataAlignment(10) = 1#
+    dataAlignment(11) = 0#
+    varAlignment = dataAlignment
+    dataViews(0) = "*Top Plane (XY)"
+    varViews = dataViews
+    ExportAsDXFNormal = swPart.ExportToDWG2(fullPath, sModelName, swExportToDWG_e.swExportToDWG_ExportAnnotationViews, True, varAlignment, False, False, 0, varViews)
+End Function

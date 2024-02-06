@@ -15,31 +15,26 @@ Dim swModel As ModelDoc2
 Dim mde As ModelDocExtension
 Dim swCustProp As CustomPropertyManager
 
-Dim Revision As String
+Dim partID as String
+Dim revision As String
 Dim Part As Object
 Dim filesave As Variant
 Dim Bodies() As SldWorks.Body2
 
 Sub main()
+    Set swApp = Application.SldWorks
+    Set swModel = swApp.ActiveDoc
 
-Set swApp = Application.SldWorks
-Set swModel = swApp.ActiveDoc
-
-
-'check for active document
-
-If swModel Is Nothing Then
-
+    'check for active document
+    If swModel Is Nothing Then
         MsgBox ("Please open a file")
-
-        ' check for solidworks Part document
 
     ElseIf swModel.GetType = swDocPART Then
 
         ' Excute required functions
-        Dim MyPath As String
-        MyPath = GetProjectDirectory(swModel)
-        outputPath = MyPath & "Output\"
+        Dim currentPath As String
+        currentPath = GetProjectDirectory(swModel)
+        outputPath = currentPath & "Output\"
         Call Mk_Dir(outputPath)
     
         Set mde = swModel.Extension
@@ -62,24 +57,25 @@ If swModel Is Nothing Then
     End If
 
 End Sub
+
 Function GetProjectDirectory(swApp As ModelDoc2) As String
 
-Dim path As String
-Dim projectPath As String
-Dim pathArray() As String
-Dim i As Long
+    Dim path As String
+    Dim projectPath As String
+    Dim pathArray() As String
+    Dim i As Long
 
-path = swApp.GetPathName
-pathArray = Split(path, "\")
+    path = swApp.GetPathName
+    pathArray = Split(path, "\")
 
-For i = LBound(pathArray, 1) To UBound(pathArray, 1)
-    projectPath = projectPath & pathArray(i) & "\"
-    If InStr(1, pathArray(i), "P-") <> 0 Then
-        Exit For
-    End If
-Next i
- 
-GetProjectDirectory = projectPath
+    For i = LBound(pathArray, 1) To UBound(pathArray, 1)
+        projectPath = projectPath & pathArray(i) & "\"
+        If InStr(1, pathArray(i), "P-") <> 0 Then
+            Exit For
+        End If
+    Next i
+    
+    GetProjectDirectory = projectPath
 
 End Function
 
@@ -95,13 +91,26 @@ Function GetRevision() As String
     Dim bool As Boolean
     Dim val As String
     Dim resolved As Boolean
-    Dim partID As String
     Dim response As String
     
 
     ' Read the revision property from solidworks custom property manager
     bool = swCustProp.Get5("revision", True, val, response, resolved)
     GetRevision = response
+
+End Function
+
+Function GetPartID() As String
+    ' Function purpose: Read revision from solidworks property manager and save it as variable
+    Dim bool As Boolean
+    Dim val As String
+    Dim resolved As Boolean
+    Dim response As String
+    
+
+    ' Read the revision property from solidworks custom property manager
+    bool = swCustProp.Get5("part_id", True, val, response, resolved)
+    GetPartID = response
 
 End Function
 
@@ -181,12 +190,12 @@ End Function
 Function Mk_Dir(path As String)
 
 
-If Len(Dir(path, vbDirectory)) = 0 Then
-' doesn't exist, so create the folder
-    MkDir path
-    Debug.Print "Directory " & path & " created."
-Else
-    Debug.Print "Directory " & path & " already exists"
-End If
+    If Len(Dir(path, vbDirectory)) = 0 Then
+    ' doesn't exist, so create the folder
+        MkDir path
+        Debug.Print "Directory " & path & " created."
+    Else
+        Debug.Print "Directory " & path & " already exists"
+    End If
 
 End Function
