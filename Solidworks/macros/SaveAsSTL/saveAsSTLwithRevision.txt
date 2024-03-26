@@ -1,0 +1,222 @@
+'Further Development were done to get Array from existing bodies at part document and save each by its name at specified path furthermore featuring enhanced error handling were added too.
+'Edited by Ubada Yusuf on 22-10-2023.
+'Modified by akl47 on 11-06-2023
+'This macro is created to figure out how to use the OpenAt part of the BrowseForFolder function
+'Edits by Carrie Ives - 2-4-2022
+'BrowsForFolder is from the Create Custom Property Macro from the GoEngineer website
+'That one was recorded on 07/10/18 by Cody Salyer
+
+Option Explicit
+
+Dim swApp As Object
+Dim startingFolder As Variant
+Public outputPath As String
+Public swModel As ModelDoc2
+Dim mde As ModelDocExtension
+Dim swCustProp As CustomPropertyManager
+
+
+Dim Revision As String
+Dim Part As Object
+Dim Configs As Variant
+Dim filesave As Variant
+Public Bodies() As SldWorks.Body2
+Public BodyExportCount As Integer
+
+
+
+Sub main()
+
+Set swApp = Application.SldWorks
+Set swModel = swApp.ActiveDoc
+
+BodyExportCount = 0
+
+'check for active document
+
+If swModel Is Nothing Then
+
+        MsgBox ("Please open a file")
+
+        ' check for solidworks Part document
+
+    ElseIf swModel.GetType = swDocPART Then
+    
+        'Get All Configurations of this part
+        Configs = swModel.GetConfigurationNames
+        Dim i As Integer
+        For i = 0 To UBound(Configs)
+            ConfigSelectDialog.ConfigBox.AddItem Configs(i)
+        Next i
+        
+        'Create Output directory if it doesnt already exist
+        Dim MyPath As String
+        MyPath = GetProjectDirectory(swModel)
+        outputPath = MyPath & "Output\"
+        Call Mk_Dir(outputPath)
+        
+        'Get Revision
+        Set mde = swModel.Extension
+        Set swCustProp = mde.CustomPropertyManager("")
+        Revision = GetRevision()
+        Debug.Print ("Rev: " & Revision)
+    
+        ' check for the revision if exist
+        If Revision = "" Then
+            MsgBox ("Please add rev")
+        Else
+            'Show Config Select Dialog if there is more than one config
+            If UBound(Configs) > 1 Then
+                ConfigSelectDialog.Show vbModeless
+            Else
+                Bodies = GetBodies()
+                Call SaveBodiesAsSTL(Bodies, "", outputPath)
+                MsgBox CStr(BodyExportCount) & " Bodies Saved As STL in " & outputPath
+                Shell "C:\WINDOWS\explorer.exe """ & outputPath & "", vbNormalFocus
+            End If
+            
+        End If
+            
+        Else
+
+        MsgBox ("Only Part Documents are supported" & vbNewLine & "Please open Part Document")
+
+    End If
+    
+    
+
+End Sub
+
+Function GetProjectDirectory(swApp As ModelDoc2) As String
+
+Dim path As String
+Dim projectPath As String
+Dim pathArray() As String
+Dim i As Long
+
+path = swApp.GetPathName
+pathArray = Split(path, "\")
+
+For i = LBound(pathArray, 1) To UBound(pathArray, 1)
+    projectPath = projectPath & pathArray(i) & "\"
+    If InStr(1, pathArray(i), "P-") <> 0 Then
+        Exit For
+    End If
+Next i
+ 
+GetProjectDirectory = projectPath
+
+End Function
+
+Function GetBodies() As SldWorks.Body2()
+    ' Function purpose: Get the bodies from a SolidWorks part and save them in an array Named Bodies
+    Dim i As Long
+    ' Get the bodies in the part
+    Debug.Print ("Getting Bodies")
+    GetBodies = swModel.GetBodies2(swSolidBody, False)
+End Function
+
+Function GetRevision() As String
+    ' Function purpose: Read revision from solidworks property manager and save it as variable
+    Dim bool As Boolean
+    Dim val As String
+    Dim resolved As Boolean
+    Dim partID As String
+    Dim response As String
+    
+
+    ' Read the revision property from solidworks custom property manager
+    bool = swCustProp.Get5("revision", True, val, response, resolved)
+    GetRevision = response
+
+End Function
+
+Function SaveBodiesAsSTL(Bodies() As SldWorks.Body2, configName As String, outputPath As String) As Boolean
+    ' Function purpose: Save each body of a MultiBody SolidWorks part Document as an STL file.
+
+    Dim swBody As Object
+    
+    Dim boolstatus As Boolean
+    Dim longstatus As Long, longwarnings As Long
+    Dim Feature As Object
+    Dim Body_Vis_States() As Boolean
+    Dim BodyArr As Variant
+    Dim myModelView As Object
+    Dim fullPath As String
+    Dim fileName As String
+    fileName = Left(swModel.GetTitle, Len(swModel.GetTitle) - 7) ' Assuming the extension is always 7 characters long (e.g., ".SLDPRT")
+    
+
+    If UBound(Bodies) > 0 Then 'If its a multibody
+    
+        ' For each body in the Bodies array, save it as an STL file
+
+        ' Get current visibility state of all bodies, put into an array
+        Dim Cnt As Integer
+        For Cnt = 0 To UBound(Bodies)
+            Set swBody = Bodies(Cnt)
+            If Not swBody Is Nothing Then
+                ReDim Preserve Body_Vis_States(0 To Cnt)
+                Body_Vis_States(Cnt) = swBody.Visible
+            End If
+        Next Cnt
+    
+        ' Hide all bodies
+        For Cnt = 0 To UBound(Bodies)
+            Set swBody = Bodies(Cnt)
+            If Not swBody Is Nothing Then
+                swBody.HideBody (True)
+            End If
+        Next Cnt
+    
+        ' Show each body one by one, save as STL, then hide again
+        For Cnt = 0 To UBound(Bodies)
+            Set swBody = Bodies(Cnt)
+            If Not swBody Is Nothing And Body_Vis_States(Cnt) Then
+                swBody.HideBody (False)
+                If Len(configName) > 0 Then
+                    fullPath = outputPath & fileName & "-" & Revision & "-" & configName & "-" & swBody.Name & ".STL"
+                Else
+                    fullPath = outputPath & fileName & "-" & Revision & "-" & swBody.Name & ".STL"
+                End If
+                
+                Debug.Print fullPath
+                
+                longstatus = swModel.SaveAs3(fullPath, 0, 2)
+                swBody.HideBody (True)
+                BodyExportCount = BodyExportCount + 1
+            End If
+        Next Cnt
+    
+    
+        ' Put bodies back in the original visibility state
+        For Cnt = 0 To UBound(Bodies)
+            Set swBody = Bodies(Cnt)
+            If Not swBody Is Nothing Then
+                swBody.HideBody (Not Body_Vis_States(Cnt))
+            End If
+        Next Cnt
+    Else
+        If Len(configName) > 0 Then
+            fullPath = outputPath & fileName & "-" & Revision & "-" & configName & ".STL"
+        Else
+            fullPath = outputPath & fileName & "-" & Revision & ".STL"
+        End If
+        longstatus = swModel.SaveAs3(fullPath, 0, 2)
+        BodyExportCount = BodyExportCount + 1
+    End If
+
+End Function
+Function Mk_Dir(path As String)
+
+
+If Len(Dir(path, vbDirectory)) = 0 Then
+' doesn't exist, so create the folder
+    MkDir path
+    Debug.Print "Directory " & path & " created."
+Else
+    Debug.Print "Directory " & path & " already exists"
+End If
+
+End Function
+
