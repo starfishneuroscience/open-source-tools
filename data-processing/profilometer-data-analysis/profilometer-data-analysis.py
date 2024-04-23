@@ -5,50 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QLabel,QHBoxLayout, QLineEdit
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.widgets import RangeSlider
-
-class DraggableLine:
-    def __init__(self, line, parent, index):
-        self.line = line
-        self.parent = parent
-        self.index = index
-        self.press = None
-        self.cidpress = line.figure.canvas.mpl_connect('button_press_event', self.on_press)
-        self.cidrelease = line.figure.canvas.mpl_connect('button_release_event', self.on_release)
-        self.cidmotion = line.figure.canvas.mpl_connect('motion_notify_event', self.on_move)
-
-    def on_press(self, event):
-        if event.inaxes != self.line.axes:
-            return
-        contains, attrd = self.line.contains(event)
-        if not contains:
-            return
-        if event.button == 2:  # Right-click
-            self.parent.remove_line(self.index)
-            return
-        self.press = event.xdata
-
-    def on_move(self, event):
-        if self.press is None:
-            return
-        if event.inaxes != self.line.axes:
-            return
-        dx = event.xdata - self.press
-        xdata = self.line.get_xdata()
-        self.line.set_xdata(xdata + dx)
-        self.press = event.xdata
-        self.line.figure.canvas.draw()
-
-    def on_release(self, event):
-        self.press = None
-
-    def disconnect(self):
-        try:
-            self.line.figure.canvas.mpl_disconnect(self.cidpress)
-            self.line.figure.canvas.mpl_disconnect(self.cidrelease)
-            self.line.figure.canvas.mpl_disconnect(self.cidmotion)
-        except Exception as e:
-            print(e)
+from matplotlib.widgets import RangeSlider, CheckButtons
+from draggableLine import DraggableLine
+from dataSelectSlider import DataSelectSlider
 
 class PlotWindow(QMainWindow):
     def __init__(self):
@@ -61,6 +20,7 @@ class PlotWindow(QMainWindow):
         self.load_button = QPushButton('Load Data')
         self.load_button.clicked.connect(self.load_data)
 
+        #Side Bar Data
         self.file_title_label = QLabel("No file loaded")
         self.file_title_label.setWordWrap(True)
 
@@ -81,18 +41,25 @@ class PlotWindow(QMainWindow):
         self.split_button.clicked.connect(self.split_data)
         self.split_button.setEnabled(False)
 
-        #Action Buttons
-        action_buttons_layout = QHBoxLayout()
-        action_buttons_layout.addWidget(self.level_button)
-        action_buttons_layout.addWidget(self.split_button)
-
-
         # Create a vertical layout for the plot and the load button
         plot_layout = QVBoxLayout()
         plot_layout.addWidget(self.load_button)
         plot_layout.addWidget(self.canvas)
+        
+        #Sliders Layout
+        self.sliders_layout = QVBoxLayout()
+        #New Slider Button
+        self.create_slider_button = QPushButton('Create Highlight Slider')  # Create the button
+        self.create_slider_button.clicked.connect(self.create_highlight_slider)  # Connect the button to the method
+        self.sliders_layout.addWidget(self.create_slider_button)
+        plot_layout.addLayout(self.sliders_layout)  
+        
+        #Action Buttons
+        action_buttons_layout = QHBoxLayout()
+        action_buttons_layout.addWidget(self.level_button)
+        action_buttons_layout.addWidget(self.split_button)
         plot_layout.addLayout(action_buttons_layout)
-
+        
         # Create Wafer ID Input:
         wafer_id_layout = QHBoxLayout()
         wafer_id_layout.addWidget(self.wafer_id_label)
@@ -128,7 +95,8 @@ class PlotWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.df = None
-        self.slider = None
+        self.sliders = []
+        self.sliders_index = 0
         self.draggable_lines = []
         self.draggable_lines_index = 0
         self.file_title = None
@@ -137,8 +105,26 @@ class PlotWindow(QMainWindow):
         self.section_id = None
         self.header = None
 
+        self.showMaximized()
+        
+    def create_highlight_slider(self):
+        print("Create New Slider")
+        slider = DataSelectSlider(self,self.sliders_index,0,1)
+        self.sliders_index = self.sliders_index + 1
+        self.sliders_layout.insertWidget(self.sliders_layout.count()-1,slider)
+        slider.closed.connect(self.handle_slider_closed)
+        slider.slider_changed.connect(self.handle_slider_changed)
+
+    def handle_slider_closed(self, slider_index):
+        print("Slider closed:", slider_index)
+        self.sliders = [s for s in self.sliders if s.index != slider_index]
+    
+    def handle_slider_changed(self,lower_bound,upper_bound):
+        print("Slider Updated: ",lower_bound,upper_bound)
+
+
     def load_data(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, 'Open CSV File', '', 'CSV Files (*.csv)')
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Open CSV File', 'C:\\Users\\Alex\\Desktop\\Implant\\Implant\\Electrodes\\Fabrication\\Metrology\\Raw Data\\DektakXT\\W-000008\\Test 01', 'CSV Files (*.csv)')
         if file_path:
             self.file_title = file_path.split('/')[-1]
             self.file_path = '/'.join(file_path.split('/')[0:-1])
@@ -165,13 +151,6 @@ class PlotWindow(QMainWindow):
 
             # Set the text of the label to the file title
             self.file_title_label.setText(f"<b>File</b>:{file_path}")
-
-            # Add a slider for selecting the range
-            if self.slider:
-                self.slider.disconnect_events()
-            ax_slider = self.figure.add_axes([0.2, 0.01, 0.65, 0.03], facecolor='lightgoldenrodyellow')
-            self.slider = RangeSlider(ax_slider, 'Select Range', self.df['X'].min(), self.df['X'].max())
-            self.slider.on_changed(self.update_highlight)
 
     def get_cvs_header(self,file_path):
         header = []
@@ -210,7 +189,6 @@ class PlotWindow(QMainWindow):
             #Activate Level Button
             self.level_button.setEnabled(True)
 
-
     def on_click(self, event):
         if event.button == 3:  # Right-click
             if event.inaxes == self.ax and self.df is not None:
@@ -227,6 +205,9 @@ class PlotWindow(QMainWindow):
         self.draggable_lines.remove([line for line in self.draggable_lines if line.index == index][0])
         line.line.remove()
         self.canvas.draw()
+
+    def remove_selection(self,index):
+        print('Remove selection: ',index)
 
     def level_data(self,event):
         pass
