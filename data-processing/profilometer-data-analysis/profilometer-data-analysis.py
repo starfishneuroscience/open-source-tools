@@ -3,7 +3,7 @@ import csv
 import time
 import pandas as pd
 import matplotlib.pyplot as plt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QLabel,QHBoxLayout, QLineEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QLabel,QHBoxLayout, QLineEdit, QScrollArea, QSizePolicy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.widgets import RangeSlider, CheckButtons
 from draggableLine import DraggableLine
@@ -47,12 +47,25 @@ class PlotWindow(QMainWindow):
         plot_layout.addWidget(self.canvas)
         
         #Sliders Layout
+        self.sliders_scroll_layout = QVBoxLayout()
         self.sliders_layout = QVBoxLayout()
         #New Slider Button
         self.create_slider_button = QPushButton('Create Highlight Slider')  # Create the button
         self.create_slider_button.clicked.connect(self.create_highlight_slider)  # Connect the button to the method
-        self.sliders_layout.addWidget(self.create_slider_button)
-        plot_layout.addLayout(self.sliders_layout)  
+        self.create_slider_button.setEnabled(False)
+
+        self.slider_scroll = QScrollArea()
+        self.slider_scroll.setWidgetResizable(True)
+        self.slider_scroll.setMaximumHeight(200)
+
+        widget = QWidget()
+        widget.setLayout(self.sliders_layout)
+        self.slider_scroll.setWidget(widget)
+
+        self.sliders_scroll_layout.addWidget(self.slider_scroll)
+        self.sliders_scroll_layout.addWidget(self.create_slider_button)
+        self.slider_scroll.setHidden(True)
+        plot_layout.addLayout(self.sliders_scroll_layout)
         
         #Action Buttons
         action_buttons_layout = QHBoxLayout()
@@ -82,7 +95,6 @@ class PlotWindow(QMainWindow):
         label_layout.addLayout(test_id_layout)
         label_layout.addLayout(section_id_layout)
 
-
         # Create a horizontal layout for the label and the plot
         main_layout = QHBoxLayout()
         main_layout.addLayout(label_layout)  # Add the Label layout to the main layout
@@ -108,10 +120,12 @@ class PlotWindow(QMainWindow):
         self.showMaximized()
         
     def create_highlight_slider(self):
-        print("Create New Slider")
-        slider = DataSelectSlider(self,self.sliders_index,0,1)
+        self.slider_scroll.setHidden(False)
+        slider = DataSelectSlider(self,self.sliders_index,self.ax.get_xlim()[0], self.ax.get_xlim()[1])
+        self.sliders.append(slider)
+        slider.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         self.sliders_index = self.sliders_index + 1
-        self.sliders_layout.insertWidget(self.sliders_layout.count()-1,slider)
+        self.sliders_layout.addWidget(slider)
         slider.closed.connect(self.handle_slider_closed)
         slider.slider_changed.connect(self.handle_slider_changed)
 
@@ -119,10 +133,6 @@ class PlotWindow(QMainWindow):
         print("Slider closed:", slider_index)
         self.sliders = [s for s in self.sliders if s.index != slider_index]
     
-    def handle_slider_changed(self,lower_bound,upper_bound):
-        print("Slider Updated: ",lower_bound,upper_bound)
-
-
     def load_data(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Open CSV File', 'C:\\Users\\Alex\\Desktop\\Implant\\Implant\\Electrodes\\Fabrication\\Metrology\\Raw Data\\DektakXT\\W-000008\\Test 01', 'CSV Files (*.csv)')
         if file_path:
@@ -151,6 +161,7 @@ class PlotWindow(QMainWindow):
 
             # Set the text of the label to the file title
             self.file_title_label.setText(f"<b>File</b>:{file_path}")
+            self.create_slider_button.setEnabled(True)
 
     def get_cvs_header(self,file_path):
         header = []
@@ -170,21 +181,23 @@ class PlotWindow(QMainWindow):
                     pass
             return header,0
 
-    def update_highlight(self, val):
+    def handle_slider_changed(self, index):
         if self.df is not None:
             self.ax.clear()
             self.ax.plot(self.df['X'], self.df['Y'], '-o', label='Loaded Data')
-            self.ax.fill_betweenx([self.ax.get_ylim()[0], self.ax.get_ylim()[1]], self.slider.val[0], self.slider.val[1], color='red', alpha=0.5, label='Selected Range')
-            
-            # Redraw all lines
-            for draggable_line in self.draggable_lines:
-                self.ax.axvline(x=draggable_line.line.get_xdata()[0], color='red', linestyle='--')
-            
-            self.ax.set_title('Line Plot Example')
-            self.ax.set_xlabel('X axis')
-            self.ax.set_ylabel('Y axis')
-            self.ax.legend()
-            self.canvas.draw()
+            for slider in self.sliders:
+                
+                self.ax.fill_betweenx([self.ax.get_ylim()[0], self.ax.get_ylim()[1]], slider.lower_bound, slider.upper_bound, color=slider.color, alpha=0.5, label='Selected Range')
+                
+                # Redraw all lines
+                for draggable_line in self.draggable_lines:
+                    self.ax.axvline(x=draggable_line.line.get_xdata()[0], color='red', linestyle='--')
+                
+                self.ax.set_title('Line Plot Example')
+                self.ax.set_xlabel('X axis')
+                self.ax.set_ylabel('Y axis')
+                self.ax.legend()
+                self.canvas.draw()
 
             #Activate Level Button
             self.level_button.setEnabled(True)

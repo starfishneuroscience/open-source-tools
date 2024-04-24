@@ -1,12 +1,12 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from superqt import QDoubleRangeSlider
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit, QColorDialog
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLineEdit, QColorDialog, QSizePolicy
 
 color_list = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
 
 class DataSelectSlider(QWidget):
     closed = pyqtSignal(int) 
-    slider_changed = pyqtSignal(float,float)
+    slider_changed = pyqtSignal(int)
     def __init__(self,parent,index,min_value,max_value):
         super().__init__()
         self.color = color_list[index]
@@ -18,6 +18,7 @@ class DataSelectSlider(QWidget):
         self.upper_bound = None
         self.lower_bound_input = None
         self.upper_bound_input = None
+        
         self.initUI()
 
     def initUI(self):
@@ -66,7 +67,7 @@ class DataSelectSlider(QWidget):
         self.layout.addWidget(self.upper_bound_input)
         self.layout.addWidget(self.color_button)
         self.layout.addWidget(self.close_button)
-
+    
         self.setLayout(self.layout)
 
     def onVisButtonClicked(self):
@@ -86,6 +87,6 @@ class DataSelectSlider(QWidget):
         self.upper_bound = t[1]
         self.lower_bound_input.setText(str(round(self.lower_bound,2)))
         self.upper_bound_input.setText(str(round(self.upper_bound,2)))
-        self.slider_changed.emit(self.lower_bound,self.upper_bound)
+        self.slider_changed.emit(self.index)
         
         
