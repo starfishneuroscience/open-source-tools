@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>pymacros</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>true</autorun>
+ <autorun-early>false</autorun-early>
+ <priority>0</priority>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>python</interpreter>
+ <dsl-interpreter-name/>
+ <text>import pya
+import math
+
+class Trace_Width_Spacing(pya.PCellDeclarationHelper):
+  """
+  The PCell declaration for the circle
+  """
+
+  def __init__(self):
+
+    # Important: initialize the super class
+    super(Trace_Width_Spacing, self).__init__()
+
+    # declare the parameters
+    self.param("l", self.TypeLayer, "Layer")
+    self.param("s", self.TypeShape, "", default = pya.DPoint(0, 0))
+    self.param("n", self.TypeInt, "Number of traces", default = 5)
+    self.param("trace_height", self.TypeDouble, "Trace Height", default=300)
+    self.param("trace_width", self.TypeDouble, "Trace Width", default=9)
+    self.param("trace_spacing", self.TypeDouble, "Trace Spacing", default=4)
+    
+    
+  def display_text_impl(self):
+    # Provide a descriptive text for the cell
+    return "Trace Spacing Test(" + str('%.1f' %self.trace_width) + "x" + ('%.1f' % self.trace_spacing) + ")"
+  """
+  def coerce_parameters_impl(self):
+  
+    # We employ coerce_parameters_impl to decide whether the handle or the 
+    # numeric parameter has changed (by comparing against the effective 
+    # radius ru) and set ru to the effective radius. We also update the 
+    # numerical value or the shape, depending on which on has not changed.
+    pass
+  
+  def can_create_from_shape_impl(self):
+    # Implement the "Create PCell from shape" protocol: we can use any shape which 
+    # has a finite bounding box
+    return self.shape.is_box() or self.shape.is_polygon() or self.shape.is_path()
+  
+  def parameters_from_shape_impl(self):
+    # Implement the "Create PCell from shape" protocol: we set r and l from the shape's 
+    pass
+  
+  def transformation_from_shape_impl(self):
+    # Implement the "Create PCell from shape" protocol: we use the center of the shape's
+    # bounding box to determine the transformation
+    return pya.Trans(self.shape.bbox().center())
+  """
+  def produce_impl(self):
+    # This is the main part of the implementation: create the layout
+  
+    # Pcell Text Generation - Flattens into Text PCell
+    lib = pya.Library.library_by_name("Basic")
+    pcell_decl = lib.layout().pcell_declaration("TEXT")
+
+    param = {"layer": self.l, "text": str('%.1f' %self.trace_width) + "x" + ('%.1f' % self.trace_spacing), "mag":15}
+    
+    
+    """
+    #List the different parameters for pcell
+    params = pcell_decl.get_parameters()
+    print(params)
+    for p in params:
+      print(p.name)
+    """
+
+    pcell_var = self.layout.add_pcell_variant(lib, pcell_decl.id(), param)
+    self.cell.insert(pya.CellInstArray(pcell_var, pya.Trans(-3000,-15000)))
+    
+    """
+    #Static Text Generation - Flattens into polygons
+    text_generator = pya.TextGenerator.default_generator()
+    text = text_generator.text("On layerer " + str(self.l), self.layout.dbu,5)
+    trans = db.Trans(1000, 2000)
+    
+
+    # NOTE: "layer_layer" is the layer index corresponding to the "LayerInfo" object
+    # inside "layer" (add "_layer" to the parameter name)
+    self.cell.shapes(self.l_layer).insert (text, trans)"""
+    
+    for i in range(0,self.n):
+      pts = [
+      (i*(self.trace_width+self.trace_spacing),0),
+      (i*(self.trace_width+self.trace_spacing),self.trace_height/2-(self.trace_width+self.trace_spacing)/2-(i*0.41421356237*(self.trace_width+self.trace_spacing))),
+      ((i+1)*(self.trace_width+self.trace_spacing),self.trace_height/2+(self.trace_width+self.trace_spacing)/2-(i*0.41421356237*(self.trace_width+self.trace_spacing))),
+      ((i+1)*(self.trace_width+self.trace_spacing),self.trace_height)]
+      
+      # create the shape
+      self.cell.shapes(self.l_layer).insert(pya.DPath(pts,self.trace_width))
+
+
+class MyLib(pya.Library):
+  """
+  The library where we will put the PCell into 
+  """
+
+  def __init__(self):
+  
+    # Set the description
+    self.description = "Starfish"
+    
+    # Create the PCell declarations
+    self.layout().register_pcell("Trace_Width_Spacing", Trace_Width_Spacing())
+    # That would be the place to put in more PCells ...
+    # If a library with that name already existed, it will be replaced then.
+    self.register("Starfish Library")
+
+
+# Instantiate and register the library
+MyLib()
+</text>
+</klayout-macro>
