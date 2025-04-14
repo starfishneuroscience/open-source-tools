@@ -55,6 +55,7 @@ class DataSelectSlider(QWidget):
         self.close_button = QPushButton("X")
         self.close_button.clicked.connect(self.onCloseButtonClicked)
         slider.valueChanged.connect(self.sliderChanged)
+        self.sliderChanged(slider.value())
 
         fm = self.lower_bound_input.fontMetrics()
         width = fm.boundingRect('00000').width()
@@ -83,10 +84,12 @@ class DataSelectSlider(QWidget):
         self.deleteLater()
 
     def sliderChanged(self,t):
+        # print("Slider Changed")
         self.lower_bound = t[0]
         self.upper_bound = t[1]
         self.lower_bound_input.setText(str(round(self.lower_bound,2)))
         self.upper_bound_input.setText(str(round(self.upper_bound,2)))
         self.slider_changed.emit(self.index)
+        print("Slider Changed Slider:",self.index,self.lower_bound,self.upper_bound)
         
         

@@ -52,7 +52,7 @@ class PlotWindow(QMainWindow):
         #New Slider Button
         self.create_slider_button = QPushButton('Create Highlight Slider')  # Create the button
         self.create_slider_button.clicked.connect(self.create_highlight_slider)  # Connect the button to the method
-        self.create_slider_button.setEnabled(False)
+        # self.create_slider_button.setEnabled(False)
 
         self.slider_scroll = QScrollArea()
         self.slider_scroll.setWidgetResizable(True)
@@ -182,6 +182,7 @@ class PlotWindow(QMainWindow):
             return header,0
 
     def handle_slider_changed(self, index):
+        print("Slider changed Window:", index)
         if self.df is not None:
             self.ax.clear()
             self.ax.plot(self.df['X'], self.df['Y'], '-o', label='Loaded Data')
