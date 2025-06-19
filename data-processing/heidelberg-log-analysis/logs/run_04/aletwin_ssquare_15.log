@@ -1,0 +1,135 @@
+2025/05/12	14:36:33.923	(ManagerExposureProcess)	S	I	Started ManagerConversion
+2025/05/12	14:36:35.613	(ManagerConversion)	S	I	Stopping a possibly running former conversion
+2025/05/12	14:36:38.225	(ManagerConversion)	S	I	Starting conversion (with Alignment parameters)
+2025/05/12	14:36:38.225	(ManagerConversion)	S	I	Waiting for the stripes.cfg file to show up.
+2025/05/12	14:37:17.711	(ManagerConversion)	S	I	The file stripes.cfg has been created by the conversion software. Cancellation counter: 0 (note: 0 means OK)
+2025/05/12	14:37:17.731	(ManagerConversion)	S	I	The file expose.cfg has been reloaded. Cancellation counter: 0 (note: 0 means OK)
+2025/05/12	14:37:17.761	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:19.810	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:21.868	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:21.887	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:23.904	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:25.989	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:28.031	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:28.048	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:30.088	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:32.144	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:34.191	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:34.208	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:36.263	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:38.330	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:40.410	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:40.424	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:42.447	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:44.504	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:46.574	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:46.591	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:48.689	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:50.711	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:52.769	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:52.786	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:37:54.821	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:56.856	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:58.891	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:37:58.909	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:01.014	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:03.069	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:05.160	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:05.175	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:07.241	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:09.289	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:11.393	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:11.410	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:13.528	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:15.595	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:17.650	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:17.666	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:19.751	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:21.809	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:23.845	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:23.862	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:25.900	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:27.957	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:29.997	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:30.011	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:32.055	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:34.106	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:36.148	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:36.165	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:38.212	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:40.248	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:42.365	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:42.381	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:44.447	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:46.525	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:48.596	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:48.612	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:50.689	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:52.714	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:54.764	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:54.781	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:38:56.799	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:38:58.838	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:00.889	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:00.906	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:02.936	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:05.018	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:07.065	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:07.081	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:09.134	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:11.173	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:13.137	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:13.155	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:15.260	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:17.323	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:19.337	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:19.353	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:21.406	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:23.202	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:25.003	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:25.019	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:27.066	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:29.104	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:31.176	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:31.192	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:33.243	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:35.160	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:37.185	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:37.202	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:39.228	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:41.264	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:43.288	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:43.303	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:45.354	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:47.468	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:49.569	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:49.585	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:51.649	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:53.695	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:55.747	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:55.763	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:39:57.784	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:39:59.812	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:01.841	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:01.856	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:40:03.873	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:05.771	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:07.657	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:07.673	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:40:09.526	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:11.225	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:12.942	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:12.958	(ManagerConversion)	S	I	The file stripes.cfg has been copied from the native linux filesystem to the local filesystem.
+2025/05/12	14:40:14.615	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:16.411	(ManagerConversion)	S	I	The file stripes.cfg is complete, i.e. the conversion software should be finished.
+2025/05/12	14:40:16.427	(ManagerConversion)	S	I	Reloaded stripes.cfg since it was not complete in the previous iteration. Matching the actual stripes: True.
+2025/05/12	14:40:16.427	(ManagerConversion)	S	I	The file stripes.cfg contains new stripes. Current number of stripes: 1
+2025/05/12	14:40:16.427	(ManagerExposureProcess)	S	I	Setting state of stripe 0 [ID: N/A] to SEQ_CONVERTED
+2025/05/12	14:40:16.728	(ManagerConversion)	S	I	Counter [The file stripes.cfg does not match the actual stripes]: 0 (note: 0 means OK)
+2025/05/12	14:40:16.728	(ManagerConversion)	S	I	Counter [The file stripes.cfg does not match the actual stripes after its completion]: 0 (note: 0 means OK)
+2025/05/12	14:40:16.728	(ManagerConversion)	S	I	Counter [The conversion did not start or stop within the given 180 sec timeout]: 0 (note: 0 means OK)
+2025/05/12	14:40:16.728	(ManagerConversion)	S	I	Deleted the copy of the file stripes.cfg from the local filesystem.
+2025/05/12	14:40:18.915	(ExposureJob)	S	I	ConvertConfigSetToOnlineChangeRotationAngle: convert.cfg to online: False, ExposureJob to online: False, new angle: False (0)
+2025/05/12	14:40:18.915	(ManagerConversion)	S	I	Reset the rotation angle calculated in the Alignment to zero.
+2025/05/12	14:40:18.915	(ManagerConversion)	S	I	ManagerConversion finished.
+2025/05/12	14:40:18.915	(ManagerExposureProcess)	S	I	Finished exposure of layer FirstExposure with the status: Finished
